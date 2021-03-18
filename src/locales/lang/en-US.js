@@ -22,7 +22,8 @@ export default {
 
   'layouts.usermenu.dialog.title': 'Message',
   'layouts.usermenu.dialog.content': 'Are you sure you would like to logout?',
-  'layouts.userLayout.title': 'Ant Design is the most influential web design specification in Xihu district',
+  'layouts.userLayout.title': 'Authorization',
+  'layouts.userLayout.description': 'FastDog admin page interface.',
   ...components,
   ...global,
   ...menu,
