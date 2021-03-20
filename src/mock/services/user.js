@@ -5,8 +5,9 @@ const info = (options) => {
   console.log('options', options)
   const userInfo = {
     'id': '4291d7da9005377ec9aec4a71ea837f',
-    'name': '天野远子',
+    'name': 'Андрей Николаевич М.',
     'username': 'admin',
+    'describe': 'Уфа, FastDog',
     'password': '',
     'avatar': '/avatar2.jpg',
     'status': 1,
@@ -23,14 +24,13 @@ const info = (options) => {
   // role
   const roleObj = {
     'id': 'admin',
-    'name': '管理员',
-    'describe': '拥有所有权限',
+    'name': 'Мартынов Андрей Николаевич',
+    'describe': 'Уфа, FastDog',
     'status': 1,
     'creatorId': 'system',
     'createTime': 1497160610259,
     'deleted': 0,
-    'permissions': [
-      {
+    'permissions': [{
       'roleId': 'admin',
       'permissionId': 'dashboard',
       'permissionName': '仪表盘',
@@ -58,7 +58,40 @@ const info = (options) => {
       }],
       'actionList': null,
       'dataAccess': null
-    }]
+    },
+      {
+        'roleId': 'admin',
+        'permissionId': 'user',
+        'permissionName': '用户管理',
+        'actions': '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"import","defaultCheck":false,"describe":"导入"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"},{"action":"export","defaultCheck":false,"describe":"导出"}]',
+        'actionEntitySet': [{
+          'action': 'add',
+          'describe': '新增',
+          'defaultCheck': false
+        }, {
+          'action': 'import',
+          'describe': '导入',
+          'defaultCheck': false
+        }, {
+          'action': 'get',
+          'describe': '详情',
+          'defaultCheck': false
+        }, {
+          'action': 'update',
+          'describe': '修改',
+          'defaultCheck': false
+        }, {
+          'action': 'delete',
+          'describe': '删除',
+          'defaultCheck': false
+        }, {
+          'action': 'export',
+          'describe': '导出',
+          'defaultCheck': false
+        }],
+        'actionList': null,
+        'dataAccess': null
+      }]
   }
 
   roleObj.permissions.push({
@@ -108,54 +141,54 @@ const userNav = (options) => {
       'id': 1,
       'meta': {
         'icon': 'dashboard',
-        'title': '仪表盘',
+        'title': 'Администрирование',
         'show': true
       },
       'component': 'RouteView',
       'redirect': '/dashboard/workplace'
     },
-    // Exception
     {
-      'name': 'exception',
-      'parentId': 0,
-      'id': 10024,
+      'name': 'workplace',
+      'parentId': 1,
+      'id': 7,
       'meta': {
-        'title': '异常页',
-        'icon': 'warning',
+        'title': 'Рабочий стол',
         'show': true
       },
-      'redirect': '/exception/403',
+      'component': 'Workplace'
+    },
+    // account
+    {
+      'name': 'account',
+      'parentId': 0,
+      'id': 10028,
+      'meta': {
+        'title': 'Персонализация',
+        'icon': 'user',
+        'show': true
+      },
+      'redirect': '/account/center',
       'component': 'RouteView'
     },
     {
-      'name': '403',
-      'parentId': 10024,
-      'id': 10025,
+      'name': 'center',
+      'parentId': 10028,
+      'id': 10029,
       'meta': {
-        'title': '403',
+        'title': 'Профиль',
         'show': true
       },
-      'component': 'Exception403'
+      'component': 'account/center'
     },
     {
-      'name': '404',
-      'parentId': 10024,
-      'id': 10026,
+      'name': 'settings',
+      'parentId': 10028,
+      'id': 10030,
       'meta': {
-        'title': '404',
+        'title': 'Настройки',
         'show': true
       },
-      'component': 'Exception404'
-    },
-    {
-      'name': '500',
-      'parentId': 10024,
-      'id': 10027,
-      'meta': {
-        'title': '500',
-        'show': true
-      },
-      'component': 'Exception500'
+      'component': 'account/setting'
     }
   ]
   const json = builder(nav)

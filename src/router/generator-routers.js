@@ -13,13 +13,7 @@ const constantRouterComponents = {
   '403': () => import(/* webpackChunkName: "error" */ '@/views/exception/403'),
   '404': () => import(/* webpackChunkName: "error" */ '@/views/exception/404'),
   '500': () => import(/* webpackChunkName: "error" */ '@/views/exception/500'),
-
-  // 你需要动态引入的页面组件
-  'Workplace': () => import('@/views/dashboard/Workplace'),
-  // exception
-  'Exception403': () => import(/* webpackChunkName: "fail" */ '@/views/exception/403'),
-  'Exception404': () => import(/* webpackChunkName: "fail" */ '@/views/exception/404'),
-  'Exception500': () => import(/* webpackChunkName: "fail" */ '@/views/exception/500')
+  'Workplace': () => import('@/views/dashboard/Workplace')
 }
 
 // 前端未找到页面路由（固定不用改）
@@ -35,7 +29,7 @@ const rootRouter = {
   component: 'BasicLayout',
   redirect: '/dashboard',
   meta: {
-    title: '首页'
+    title: 'FastDog'
   },
   children: []
 }

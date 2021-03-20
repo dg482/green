@@ -1,4 +1,5 @@
 export default {
+  'user.welcome': 'Добро пожаловать',
   'user.login.userName': 'Имя пользователя',
   'user.login.password': 'Пароль',
   'user.login.username.placeholder': 'Имя пользователя: admin',

@@ -31,31 +31,19 @@ export const asyncRouterMap = [
           }
         ]
       },
-      // Exception
+      // account
       {
-        path: '/exception',
-        name: 'exception',
+        path: '/account',
         component: RouteView,
-        redirect: '/exception/403',
-        meta: { title: 'menu.exception', icon: 'warning', permission: ['exception'] },
+        redirect: '/account/center',
+        name: 'account',
+        meta: { title: 'menu.account', icon: 'user', keepAlive: true, permission: ['user'] },
         children: [
           {
-            path: '/exception/403',
-            name: 'Exception403',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/403'),
-            meta: { title: 'menu.exception.not-permission', permission: ['exception'] }
-          },
-          {
-            path: '/exception/404',
-            name: 'Exception404',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404'),
-            meta: { title: 'menu.exception.not-find', permission: ['exception'] }
-          },
-          {
-            path: '/exception/500',
-            name: 'Exception500',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/500'),
-            meta: { title: 'menu.exception.server-error', permission: ['exception'] }
+            path: '/account/center',
+            name: 'center',
+            component: () => import('@/views/account/center'),
+            meta: { title: 'menu.account.center', keepAlive: true, permission: ['user'] }
           }
         ]
       }
