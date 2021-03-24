@@ -14,5 +14,7 @@ export default {
   'user.login.signup': 'Регистрация',
   'user.login.login': 'Вход',
   'user.userName.required': 'Пожалуйста введите Имя пользователя или email',
-  'user.password.required': 'Пожалуйста введите пароль!'
+  'user.password.required': 'Пожалуйста введите пароль!',
+  'user.login.success.message': 'Авторизация',
+  'user.login.success.description': 'Вход выполнен успешно.'
 }

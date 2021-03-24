@@ -91,7 +91,33 @@ const info = (options) => {
         }],
         'actionList': null,
         'dataAccess': null
-      }]
+      },
+      {
+        'roleId': 'admin',
+        'permissionId': 'form',
+        'permissionName': 'Form',
+        'actions': '[{"action":"add","defaultCheck":false,"describe":"新增"},{"action":"import","defaultCheck":false,"describe":"导入"},{"action":"get","defaultCheck":false,"describe":"详情"},{"action":"update","defaultCheck":false,"describe":"修改"},{"action":"delete","defaultCheck":false,"describe":"删除"},{"action":"export","defaultCheck":false,"describe":"导出"}]',
+        'actionEntitySet': [{
+          'action': 'add',
+          'describe': '新增',
+          'defaultCheck': false
+        }, {
+          'action': 'get',
+          'describe': '详情',
+          'defaultCheck': false
+        }, {
+          'action': 'update',
+          'describe': '修改',
+          'defaultCheck': false
+        }, {
+          'action': 'delete',
+          'describe': '删除',
+          'defaultCheck': false
+        }],
+        'actionList': null,
+        'dataAccess': null
+      }
+    ]
   }
 
   roleObj.permissions.push({
@@ -189,6 +215,28 @@ const userNav = (options) => {
         'show': true
       },
       'component': 'account/setting'
+    },
+    {
+      'name': 'form',
+      'parentId': 0,
+      'id': 10100,
+      'meta': {
+        'icon': 'setting',
+        'title': 'Формы',
+        'show': true
+      },
+      'redirect': '/form/builder',
+      'component': 'RouteView'
+    },
+    {
+      'name': 'builder',
+      'parentId': 10100,
+      'id': 10101,
+      'meta': {
+        'title': 'Сборщик форм',
+        'show': true
+      },
+      'component': 'form/builder'
     }
   ]
   const json = builder(nav)
