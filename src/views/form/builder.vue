@@ -5,21 +5,41 @@
         <page-header-wrapper/>
       </a-col>
     </a-row>
+    <a-row :gutter="[24,16]">
+      <FormBuilder
+        :id="formId"
+        :use-drawer="true"
+        :isVisible="formIsVisible"
+        :form="formLoad"
+        :onCloseDrawer="formOnClose"/>
+    </a-row>
   </div>
 </template>
 
 <script>
+import FormBuilder from '@/components/Forms/FormBuilder'
 
 export default {
   name: 'Builder',
-  components: {},
-  data () {
-    return {}
+  components: {
+    FormBuilder
   },
-  methods: {}
+  data () {
+    return {
+      formId: 'default',
+      formLoad: null,
+      loading: false,
+      formIsVisible: false
+    }
+  },
+  methods: {
+    formOnClose (success) {
+      this.formIsVisible = false
+      this.formLoad = null
+      // if (success === true) {
+      //   this.runAction({ id: 'reload' })
+      // }
+    }
+  }
 }
 </script>
-
-<style lang="less" scoped>
-
-</style>
