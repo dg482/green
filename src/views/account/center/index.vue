@@ -2,7 +2,7 @@
   <div class="page-header-index-wide page-header-wrapper-grid-content-main">
     <a-row :gutter="[24,16]">
       <a-col :md="24" :lg="24">
-        <page-header-wrapper :title="false"/>
+        <page-header-wrapper />
       </a-col>
     </a-row>
     <a-row :gutter="24">
