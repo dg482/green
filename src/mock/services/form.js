@@ -237,4 +237,4 @@ const form = () => {
   })
 }
 
-Mock.mock(/\/resource\/form/, 'get', form)
+Mock.mock(/\/resource/, 'get', form)

@@ -6,23 +6,18 @@
       </a-col>
     </a-row>
     <a-row :gutter="[24,16]">
-      <FormBuilder
-        :id="formId"
-        :use-drawer="true"
-        :isVisible="formIsVisible"
-        :form="formLoad"
-        :onCloseDrawer="formOnClose"/>
+      <Resource />
     </a-row>
   </div>
 </template>
 
 <script>
-import FormBuilder from '@/components/Forms/FormBuilder'
+import Resource from '@/components/Resource'
 
 export default {
   name: 'Builder',
   components: {
-    FormBuilder
+    Resource
   },
   data () {
     return {
