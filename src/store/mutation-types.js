@@ -22,3 +22,15 @@ export const NAV_THEME = {
   LIGHT: 'light',
   DARK: 'dark'
 }
+
+export const FORM_SET = 'FORM_SET'
+export const FORM_CLEAR = 'FORM_CLEAR'
+export const DRAWER_SET = 'DRAWER_SET'
+export const NOTIFICATION_SET = 'NOTIFICATION_SET'
+
+export const UI_SET_SIZE = 'UI_SET_SIZE'
+export const UI_SET_APP_KEY = 'UI_SET_APP_KEY'
+
+export const SET_ERROR = 'SET_ERROR'
+export const SET_DEBUG = 'SET_DEBUG'
+export const SET_EXCEPTION = 'SET_EXCEPTION'

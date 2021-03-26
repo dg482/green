@@ -111,7 +111,7 @@
 </template>
 
 <script>
-import { get } from '@/store/modules/api'
+import request from '@/utils/request'
 import FormBuilder from '../Forms/FormBuilder'
 import Exception from '@/components/Exception'
 import { mapGetters } from 'vuex'
@@ -168,12 +168,16 @@ export default {
         pager.current = pagination.current
         this.pagination = pager
 
-        get(this.url, {
-          results: pagination.pageSize,
-          page: pagination.current,
-          sortField: sorter.field,
-          sortOrder: sorter.order,
-          ...filters
+        request({
+          url: this.url,
+          method: 'get',
+          params: {
+            results: pagination.pageSize,
+            page: pagination.current,
+            sortField: sorter.field,
+            sortOrder: sorter.order,
+            ...filters
+          }
         })
       }
     },
@@ -259,7 +263,11 @@ export default {
         case 'reload':
           load(true)
           console.log(this.url, this.params)
-          get(this.url, this.params).then(function (response) {
+          request({
+            url: this.url,
+            method: 'get',
+            params: this.params
+          }).then(function (response) {
             return update(response)
           }).catch(function (error) {
             load(false)
