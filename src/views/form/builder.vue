@@ -5,21 +5,36 @@
         <page-header-wrapper/>
       </a-col>
     </a-row>
+    <a-row :gutter="[24,16]">
+      <Resource />
+    </a-row>
   </div>
 </template>
 
 <script>
+import Resource from '@/components/Resource'
 
 export default {
   name: 'Builder',
-  components: {},
-  data () {
-    return {}
+  components: {
+    Resource
   },
-  methods: {}
+  data () {
+    return {
+      formId: 'default',
+      formLoad: null,
+      loading: false,
+      formIsVisible: false
+    }
+  },
+  methods: {
+    formOnClose (success) {
+      this.formIsVisible = false
+      this.formLoad = null
+      // if (success === true) {
+      //   this.runAction({ id: 'reload' })
+      // }
+    }
+  }
 }
 </script>
-
-<style lang="less" scoped>
-
-</style>
