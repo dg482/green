@@ -40,7 +40,7 @@ export default {
   methods: {
     load () {
       const update = (response) => {
-        this.table = response.result.result
+        this.table = response.result.table
       }
       const setException = (exception) => this.$store.dispatch('service/ACTION_SET_EXCEPTION', exception)
 
@@ -58,7 +58,7 @@ export default {
 
             update({
               result: {
-                result: {
+                table: {
                   title: 'Ошибка загрузки данных',
                   columns: [],
                   data: []
