@@ -54,7 +54,7 @@ export default {
         if (response.data.success) {
           update(response)
         } else {
-          console.log(response.data.exception)
+          console.log(response.data)
           if (response.data.exception) {
             setException(response.data.exception)
           }

@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-card v-if="exception!==null">
-      <exception v-if="$store.getters['service/exception']"/>
+      <exception v-if="$store.getters['exception']"/>
     </a-card>
     <a-card
       :loading="!table"
@@ -126,7 +126,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      exception: 'service/exception'
+      exception: 'exception'
     })
   },
   data () {

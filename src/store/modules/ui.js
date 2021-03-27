@@ -10,49 +10,50 @@ import VueLocalStorage from 'vue-localstorage'
 
 Vue.use(VueLocalStorage)
 
-export const state = {
-  size: 'default', // large, default, small
-  theme: 'app-theme-dark',
-  key: Math.random()
-}
-
-export const getters = {
-  [GET_UI_SIZE]: (state) => {
-    return state.size
+const ui = {
+  state: {
+    size: 'default', // large, default, small
+    theme: 'app-theme-dark',
+    key: Math.random()
   },
-  [GET_UI_HEADER_INFO]: () => {
-    return Vue.localStorage.get('settings/ui.header.user_info')
+  getters: {
+    [GET_UI_SIZE]: (state) => {
+      return state.size
+    },
+    [GET_UI_HEADER_INFO]: () => {
+      return Vue.localStorage.get('settings/ui.header.user_info')
+    },
+    [GET_UI_DRAWER_PLACEMENT]: () => {
+      const placement = parseInt(Vue.localStorage.get('settings/ui.drawer.placement'))
+      switch (placement) {
+        case 1:
+          return 'left'
+        case 2:
+          return 'right'
+        default:
+          return 'left'
+      }
+    },
+    [GET_UI_APP_KEY]: () => ui.state.key
   },
-  [GET_UI_DRAWER_PLACEMENT]: () => {
-    const placement = parseInt(Vue.localStorage.get('settings/ui.drawer.placement'))
-    switch (placement) {
-      case 1:
-        return 'left'
-      case 2:
-        return 'right'
-      default:
-        return 'left'
+  mutations: {
+    [UI_SET_SIZE] (state, size) {
+      state.size = size
+    },
+    [UI_SET_APP_KEY] (state) {
+      state.key = Math.random()
     }
   },
-  [GET_UI_APP_KEY]: () => state.key
-}
-
-export const mutations = {
-  [UI_SET_SIZE] (state, size) {
-    state.size = size
-  },
-  [UI_SET_APP_KEY] (state) {
-    state.key = Math.random()
+  actions: {
+    [ACTION_UI_SET_SIZE] (context) {
+      if ((window.outerWidth / 2) < 500) {
+        context.commit(UI_SET_SIZE, 'small')
+      }
+    },
+    [UI_SET_APP_KEY] (context) {
+      context.commit('UI_SET_APP_KEY')
+    }
   }
 }
 
-export const actions = {
-  [ACTION_UI_SET_SIZE] (context) {
-    if ((window.outerWidth / 2) < 500) {
-      context.commit(UI_SET_SIZE, 'small')
-    }
-  },
-  [UI_SET_APP_KEY] (context) {
-    context.commit('UI_SET_APP_KEY')
-  }
-}
+export default ui
