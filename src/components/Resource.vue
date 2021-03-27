@@ -12,7 +12,7 @@
 
 <script>
 import TableBuilder from '@/components/Tables/TableBuilder'
-import request from '@/utils/request'
+import { resource } from '@/api/resource'
 
 export default {
   name: 'Resource',
@@ -40,37 +40,34 @@ export default {
   methods: {
     load () {
       const update = (response) => {
-        this.table = response.data.table
+        this.table = response.result.result
       }
       const setException = (exception) => this.$store.dispatch('service/ACTION_SET_EXCEPTION', exception)
 
       update({ data: { table: null } })
 
-      request({
-        url: '/resource',
-        method: 'get',
-        params: this.params
-      }).then(function (response) {
-        if (response.data.success) {
-          update(response)
-        } else {
-          console.log(response.data)
-          if (response.data.exception) {
-            setException(response.data.exception)
-          }
-
-          update({
-            data: {
-              table: {
-                title: 'Ошибка загрузки данных',
-                columns: [],
-                data: []
-              }
+      resource(this.params)
+        .then(function (response) {
+          if (response.result.success) {
+            update(response)
+          } else {
+            console.log(response.data)
+            if (response.data.exception) {
+              setException(response.data.exception)
             }
-          })
-        }
-        return response
-      })
+
+            update({
+              data: {
+                table: {
+                  title: 'Ошибка загрузки данных',
+                  columns: [],
+                  data: []
+                }
+              }
+            })
+          }
+          return response
+        })
     }
   },
   mounted () {
