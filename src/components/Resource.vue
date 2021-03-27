@@ -44,7 +44,7 @@ export default {
       }
       const setException = (exception) => this.$store.dispatch('service/ACTION_SET_EXCEPTION', exception)
 
-      update({ data: { table: null } })
+      update({ result: { result: null } })
 
       resource(this.params)
         .then(function (response) {
@@ -57,8 +57,8 @@ export default {
             }
 
             update({
-              data: {
-                table: {
+              result: {
+                result: {
                   title: 'Ошибка загрузки данных',
                   columns: [],
                   data: []

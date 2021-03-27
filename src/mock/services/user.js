@@ -222,10 +222,10 @@ const userNav = (options) => {
       'id': 10100,
       'meta': {
         'icon': 'setting',
-        'title': 'Формы',
+        'title': 'Ресурсы',
         'show': true
       },
-      'redirect': '/form/builder',
+      'redirect': '/resource/builder',
       'component': 'RouteView'
     },
     {
@@ -233,10 +233,12 @@ const userNav = (options) => {
       'parentId': 10100,
       'id': 10101,
       'meta': {
-        'title': 'Сборщик форм',
-        'show': true
+        'title': 'Пользователи',
+        'icon': 'team',
+        'show': true,
+        'resource': 'user'
       },
-      'component': 'form/builder'
+      'component': 'resource/builder'
     }
   ]
   const json = builder(nav)
