@@ -4,7 +4,7 @@ import { builder } from '../util'
 const resource = () => {
   return builder({
     'success': true,
-    'result': {
+    'table': {
       'title': 'Пользователи',
       'columns': [
         {
