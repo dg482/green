@@ -85,8 +85,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      drawer: 'service/GET_DRAWER',
-      size: 'ui/GET_UI_SIZE'
+      drawer: 'GET_DRAWER',
+      size: 'GET_UI_SIZE'
     })
   },
   watch: {},
@@ -111,7 +111,7 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('ui/ACTION_UI_SET_SIZE')
+    this.$store.dispatch('ACTION_UI_SET_SIZE')
     // this.form = this.formById(this.id);
   },
   methods: {
@@ -146,7 +146,7 @@ export default {
 
     },
     onClose (success) {
-      this.$store.dispatch('service/ACTION_FORM_CLEAR', {
+      this.$store.dispatch('ACTION_FORM_CLEAR', {
         id: this.id
       })
 
@@ -175,14 +175,14 @@ export default {
         this.errors.map(function (error) {
           message.push(error)
         })
-        this.$store.dispatch('service/ACTION_SET_NOTIFICATION', {
+        this.$store.dispatch('ACTION_SET_NOTIFICATION', {
           type: 'error',
           message: 'Ошибка выполнения команды',
           description: message.join('<br />')
         })
       }
       const setNotification = (notification) => {
-        this.$store.dispatch('service/ACTION_SET_NOTIFICATION', notification)
+        this.$store.dispatch('ACTION_SET_NOTIFICATION', notification)
       }
 
       const formData = new FormData()
@@ -221,11 +221,11 @@ export default {
                 }
               }
 
-              this.$store.dispatch('service/ACTION_FORM_SAVE', formData).then(function (response) {
+              this.$store.dispatch('ACTION_FORM_SAVE', formData).then(function (response) {
                 if (response.data.success) {
                   switch (response.data.form.form) {
                     case 'settings/ui':
-                      me.$store.dispatch('ui/UI_SET_APP_KEY')
+                      me.$store.dispatch('UI_SET_APP_KEY')
                       break
                   }
                   setNotification({ type: 'success', message: 'Команда выполнена успешно' })
@@ -249,7 +249,7 @@ export default {
           break
         case 'action_cancel':
         default:
-          this.$store.dispatch('service/ACTION_FORM_CLEAR')
+          this.$store.dispatch('ACTION_FORM_CLEAR')
           break
       }
       setTimeout(function () {

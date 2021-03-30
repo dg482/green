@@ -59,7 +59,12 @@ const resource = () => {
         { 'id': 18, 'email': 'example1@test.com' },
         { 'id': 19, 'email': 'example1@test.com' }
       ],
-      'actions': [],
+      'actions': [{
+        'id': 'update',
+        'text': 'Редактировать',
+        'icon': 'edit',
+        'form': 'user'
+      }],
       'rowActions': [],
       'pagination': {
         'showSizeChanger': true,

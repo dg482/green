@@ -6,7 +6,7 @@ const form = () => {
     'success': true,
     'result': {
       'title': 'forms',
-      'form': 'ui',
+      'form': 'user',
       'items': [
         {
           'id': 1616556595,
@@ -237,7 +237,7 @@ const form = () => {
       },
       'context': 'Dg482\\Red\\Resource\\Resource'
     }
-  })
+  }, 'form load', 200)
 }
 
 Mock.mock(/\/form/, 'get', form)

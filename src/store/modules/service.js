@@ -65,14 +65,14 @@ const service = {
         // state[id + '.' + item.field] = form.values[item.field];
 
         if (item.items) {
-          me.commit('service/localStorageField', { form: payload.form, items: item.items })
+          me.commit('localStorageField', { form: payload.form, items: item.items })
         }
       })
     },
     [FORM_SET] (state, form) {
       state.form[form.form] = form
       if (form) {
-        this.commit('service/localStorageField', { form: form, items: form.items })
+        this.commit('localStorageField', { form: form, items: form.items })
       }
     },
     [FORM_CLEAR] (state, id) {
@@ -143,10 +143,17 @@ const service = {
         data: payload
       }).then(function (response) {
         console.log(response)
+        if (response.code) {
+          response.status = response.code
+        }
+        if (response.result) {
+          response.data = response.result
+        }
+
         switch (response.status) {
           case 200:
             if (response.data.success) {
-              context.commit(FORM_SET, response.data.form)
+              context.commit(FORM_SET, response.data.result)
             }
             break
           default:
