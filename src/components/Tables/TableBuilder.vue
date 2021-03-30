@@ -242,15 +242,15 @@ export default {
         this.formId = form
       }
       const setFormLoad = () => {
-        this.formLoad = this.$store.getters['service/GET_FORM'](this.formId)
+        this.formLoad = this.$store.getters['GET_FORM'](this.formId)
       }
-
+      console.log('action', action)
       setForm(action.form)
 
       switch (action.id) {
         case 'update':
           this.formIsVisible = true
-          this.$store.dispatch('service/ACTION_FORM_GET', {
+          this.$store.dispatch('ACTION_FORM_GET', {
             form: action.form,
             id: record.id
           }).then(function (response) {
