@@ -34,8 +34,13 @@
           </a-upload>
         </div>
         <a-input
-          v-if="['text','string'].indexOf(element.type) !==-1"
+          v-if="['text','string'].includes(element.type)"
           v-model="form.values[element.field]"
+          :disabled="element.disabled"/>
+        <a-input-number
+          v-if="['smallint','int','bigint','float'].includes(element.type)"
+          v-model="form.values[element.field]"
+          :precision="getPrecision(element)"
           :disabled="element.disabled"/>
         <a-switch
           v-if="element.type === 'switch'"
@@ -112,6 +117,9 @@ export default {
     }
   },
   methods: {
+    getPrecision (element) {
+      return (element.type === 'float') ? 2 : 0
+    },
     handleChange ({ file }) {
       const { element, form } = this
       if (file.status !== 'uploading') {

@@ -132,7 +132,7 @@ const form = () => {
         },
         {
           'id': 1616595326,
-          'name': '',
+          'name': 'Возраст',
           'type': 'smallint',
           'field': 'age',
           'disabled': false,
@@ -145,7 +145,7 @@ const form = () => {
         },
         {
           'id': 1616571484,
-          'name': '',
+          'name': 'Баланс',
           'type': 'float',
           'field': 'balance',
           'disabled': false,
@@ -158,7 +158,7 @@ const form = () => {
         },
         {
           'id': 1616582772,
-          'name': '',
+          'name': 'Итого',
           'type': 'bigint',
           'field': 'total',
           'disabled': false,
@@ -202,7 +202,10 @@ const form = () => {
       'values': {
         'email': 'example1@test.com',
         'name': 'Andy Smith',
-        'password': ''
+        'password': '',
+        'age': '10',
+        'balance': '123.34',
+        'total': '5.55'
       },
       'validator': {
         'email': [
