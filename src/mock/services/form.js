@@ -199,7 +199,11 @@ const form = () => {
           'isLoad': false
         }
       ],
-      'values': [],
+      'values': {
+        'email': 'example1@test.com',
+        'name': 'Andy Smith',
+        'password': ''
+      },
       'validator': {
         'email': [
           'required',
