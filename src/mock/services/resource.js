@@ -65,7 +65,25 @@ const resource = () => {
         'icon': 'edit',
         'form': 'user'
       }],
-      'rowActions': [],
+      'rowActions': [{
+        'id': 'update',
+        'text': 'Редактировать',
+        'icon': 'edit',
+        'form': 'user'
+      }, {
+        'id': 'delete',
+        'text': 'Удалить',
+        'icon': 'delete',
+        'form': 'user',
+        'confirm': {
+          'title': 'Требуется подтверждение действия',
+          'message': 'Вы уверены что следует продолжать?)',
+          'icon': 'exclamation-circle',
+          'okText': 'Да',
+          'okType': 'primary',
+          'cancelText': 'Нет'
+        }
+      }],
       'pagination': {
         'showSizeChanger': true,
         'total': 19,

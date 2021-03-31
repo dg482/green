@@ -8,7 +8,7 @@
     @close="onClose"
     :afterVisibleChange="afterVisibleChange"
     :width="width()">
-    <div class="text-center" style="padding-top: 250px" v-if="!form">
+    <div style="padding-top: 250px; text-align: center" v-if="!form">
       <a-spin tip=" Выполнение команды..." size="large">
         <a-icon slot="indicator" type="loading" style="font-size: 24px"/>
       </a-spin>
@@ -33,7 +33,6 @@
                 :key="idx"
                 :type="errors.length > 0?'danger':button.type"
                 :icon="button.icon"
-                :shape="button.shape"
                 :loading="button.load"
                 :disabled="button.disabled"
                 :size="size"
@@ -67,12 +66,14 @@ import Vue from 'vue'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import Elements from './Elements'
 import moment from 'moment'
+import { Form } from 'ant-design-vue'
 
 export default {
   name: 'FormBuilder',
   components: {
     VuePerfectScrollbar,
-    'elements': Elements
+    'elements': Elements,
+    'a-form-model': Form
   },
   props: {
     isVisible: Boolean,

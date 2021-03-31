@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="element.items.length === 0">
+    <template v-if="!element.items || (element.items && element.items.length === 0)">
       <a-form-model-item
         v-if="element.type !== 'hidden'"
         :label="element.name"
@@ -90,13 +90,15 @@
 import Badge from './Badge'
 import Cookies from 'js-cookie'
 import locale from 'ant-design-vue/es/date-picker/locale/ru_RU'
+import FormItem from 'ant-design-vue/es/form-model/FormItem'
 
 export default {
   name: 'Elements',
   props: ['element', 'form', 'errors'],
   components: {
     'table-builder': () => import('../Tables/TableBuilder'),
-    'badge': Badge
+    'badge': Badge,
+    'a-form-model-item': FormItem
   },
   computed: {},
   data () {
