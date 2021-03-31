@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="element.badge && element.badge.badge === 'default'">
+    <template v-if="element.badge && (element.badge.badge === 'default')">
       {{ element.badge.description }}
       <span
         v-html="element.badge.text"
@@ -11,7 +11,7 @@
         {{ element.badge.description }}
       </a-badge>
     </template>
-    <template v-if="element.badges.length > 0">
+    <template v-if="Array.isArray(element.badges)">
       <template v-for="(badge, idx) in element.badges">
         <template v-if="badge.badge === 'default'">
           {{ badge.description }}

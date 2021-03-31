@@ -5,12 +5,12 @@ const form = () => {
   return builder({
     'success': true,
     'result': {
-      'title': 'forms',
+      'title': 'User Form',
       'form': 'user',
       'items': [
         {
           'id': 1616556595,
-          'name': '',
+          'name': 'ID',
           'type': 'hidden',
           'field': 'id',
           'disabled': false,
@@ -23,33 +23,12 @@ const form = () => {
         },
         {
           'id': 1616532180,
-          'name': '',
+          'name': 'Email',
           'type': 'string',
           'field': 'email',
           'disabled': false,
           'attributes': [],
           'validators': [
-            {
-              'idx': 'required',
-              'rule': 'required',
-              'trigger': [
-                'blur',
-                'change'
-              ],
-              'message': 'validation.required',
-              'type': 'string',
-              'required': true
-            },
-            {
-              'idx': 'email',
-              'rule': 'email',
-              'trigger': [
-                'blur',
-                'change'
-              ],
-              'message': '\u041f\u043e\u043b\u0435 Email \u0437\u0430\u043f\u043e\u043b\u043d\u0435\u043d\u043d\u043e \u043d\u0435 \u043a\u043e\u0440\u0440\u0435\u043a\u0442\u043d\u043e!',
-              'type': 'any'
-            },
             {
               'idx': 'required',
               'rule': 'required',
@@ -79,7 +58,7 @@ const form = () => {
         },
         {
           'id': 1616558255,
-          'name': 'Name',
+          'name': 'Имя пользователя',
           'type': 'string',
           'field': 'name',
           'disabled': false,
@@ -111,12 +90,12 @@ const form = () => {
           ],
           'value': {
             'id': 0,
-            'value': ''
+            'value': 'example1@test.com'
           }
         },
         {
           'id': 1616562505,
-          'name': 'Password',
+          'name': 'Пароль',
           'type': 'string',
           'field': 'password',
           'disabled': false,
@@ -220,7 +199,11 @@ const form = () => {
           'isLoad': false
         }
       ],
-      'values': [],
+      'values': {
+        'email': 'example1@test.com',
+        'name': 'Andy Smith',
+        'password': ''
+      },
       'validator': {
         'email': [
           'required',

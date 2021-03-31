@@ -46,7 +46,7 @@
         :columns="tbl().columns"
         :data-source="tbl().data"
         :size="size"
-        :rowKey="'_id'"
+        :rowKey="'id'"
         :loading="loading"
         :pagination="tbl.pagination"
         :scroll="{y:scrollY,x:((table.columns.length - 2) * 200) + 150}"
@@ -308,5 +308,9 @@ export default {
 .ant-upload-list-picture-card-container {
   height: 50px !important;
   margin: 0 !important;
+}
+
+.mr-1 {
+  margin-right: 2px;
 }
 </style>
