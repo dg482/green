@@ -1,7 +1,7 @@
 {
   "name": "dg482-green",
   "version": "1.0.0",
-  "private": true,
+  "description": "UI based on antdv.pro for dg482/red pkg",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -10,6 +10,12 @@
     "build:preview": "vue-cli-service build --mode preview",
     "lint:nofix": "vue-cli-service lint --no-fix"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dg482/green"
+  },
+  "author": "dg482",
+  "license": "MIT",
   "dependencies": {
     "@ant-design-vue/pro-layout": "^1.0.7",
     "@antv/data-set": "^0.10.2",
