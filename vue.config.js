@@ -115,6 +115,7 @@ const vueConfig = {
 
   // disable source map in production
   productionSourceMap: false,
+  outputDir: 'public/',
   lintOnSave: undefined,
   // babel-loader no-ignore node_modules/*
   transpileDependencies: []
