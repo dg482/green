@@ -1,0 +1,38 @@
+{
+  "name": "dg482/green",
+  "description": "UI based on antdv.pro for dg482/red pkg",
+  "type": "library",
+  "license": "MIT",
+  "keywords": [],
+  "authors": [
+    {
+      "name": "dg482",
+      "email": "d.g.dev482@gmail.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {},
+  "require-dev": {
+  },
+  "autoload": {
+    "psr-4": {
+      "Dg482\\Green\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Dg482\\Green\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit",
+    "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+  },
+  "extra": {
+  }
+}
