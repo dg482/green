@@ -16,5 +16,7 @@ export default {
   'user.userName.required': 'Please enter account name or email address',
   'user.password.required': 'Please enter your password!',
   'user.login.success.message': 'Authorization',
-  'user.login.success.description': 'Login success.'
+  'user.login.success.description': 'Login success.',
+  'user.assess.denied': 'Forbidden',
+  'user.access.unauthorized': 'Authorization verification failed'
 }

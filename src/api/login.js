@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { get, post } from '@/api/service'
 
 const userApi = {
   Login: '/auth/login',
@@ -25,29 +26,11 @@ const userApi = {
  * @returns {*}
  */
 export function login (parameter) {
-  return request({
-    url: userApi.Login,
-    method: 'post',
-    data: parameter
-  })
-}
-
-export function getSmsCaptcha (parameter) {
-  return request({
-    url: userApi.SendSms,
-    method: 'post',
-    data: parameter
-  })
+  return post(userApi.Login, parameter)
 }
 
 export function getInfo () {
-  return request({
-    url: userApi.UserInfo,
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8'
-    }
-  })
+  return get(userApi.UserInfo)
 }
 
 export function getCurrentUserNav () {

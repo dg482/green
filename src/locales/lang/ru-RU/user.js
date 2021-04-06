@@ -16,5 +16,7 @@ export default {
   'user.userName.required': 'Пожалуйста введите Имя пользователя или email',
   'user.password.required': 'Пожалуйста введите пароль!',
   'user.login.success.message': 'Авторизация',
-  'user.login.success.description': 'Вход выполнен успешно.'
+  'user.login.success.description': 'Вход выполнен успешно.',
+  'user.assess.denied': 'Доступ запрешен',
+  'user.access.unauthorized': 'Запрос не авторизован'
 }

@@ -5,21 +5,25 @@ import moment from 'moment'
 
 // default lang
 import enUS from './lang/en-US'
+import ruRu from './lang/ru-RU'
 
 Vue.use(VueI18n)
 
-export const defaultLang = 'en-US'
+export const defaultLang = 'ru-RU'
 
 const messages = {
   'en-US': {
     ...enUS
+  },
+  'ru-RU': {
+    ...ruRu
   }
 }
 
 const i18n = new VueI18n({
   silentTranslationWarn: true,
   locale: defaultLang,
-  fallbackLocale: defaultLang,
+  fallbackLocale: 'en-US',
   messages
 })
 

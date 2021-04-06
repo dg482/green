@@ -59,12 +59,10 @@
 </template>
 
 <script>
-import md5 from 'md5'
 import { mapActions } from 'vuex'
 
 export default {
-  components: {
-  },
+  components: {},
   data () {
     return {
       customActiveKey: 'tab1',
@@ -123,7 +121,7 @@ export default {
           const loginParams = { ...values }
           delete loginParams.username
           loginParams[!state.loginType ? 'email' : 'username'] = values.username
-          loginParams.password = md5(values.password)
+          loginParams.password = values.password
           Login(loginParams)
             .then((res) => this.loginSuccess(res))
             .catch(err => this.requestFailed(err))
@@ -154,7 +152,6 @@ export default {
     requestFailed (err) {
       this.isLoginError = true
       const trans = (text) => this.$t(text)
-
       this.$notification['error']({
         message: trans('user.login.success.message'),
         description: trans('user.login.message-invalid-credentials'),
