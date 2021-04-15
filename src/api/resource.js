@@ -1,13 +1,9 @@
-import request from '@/utils/request'
+import { get } from './service'
 
 const resourceApi = {
   Resource: '/resource'
 }
 
 export function resource (parameter) {
-  return request({
-    url: resourceApi.Resource,
-    method: 'get',
-    data: parameter
-  })
+  return get(resourceApi.Resource, parameter)
 }
