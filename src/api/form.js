@@ -1,13 +1,14 @@
-import request from '@/utils/request'
+import { get } from './service'
 
 const api = {
-  resource: '/resource'
+  form: '/resource/form'
 }
 
-export function getResource (parameter) {
-  return request({
-    url: api.user,
-    method: 'get',
-    params: parameter
+export function getForm (parameter) {
+  const form = parameter.form.split('/')
+  return get(api.form, {
+    alias: form[0],
+    form: form[1],
+    id: parameter.id
   })
 }

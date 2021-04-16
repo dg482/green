@@ -14,6 +14,7 @@ import {
 
 import VueLocalStorage from 'vue-localstorage'
 import { get, post } from '@/api/service'
+import { getForm } from '@/api/form'
 
 Vue.use(VueLocalStorage)
 
@@ -137,27 +138,9 @@ const service = {
     },
     async [ACTION_FORM_GET] (context, payload) {
       context.commit(DRAWER_SET, true)
-
-      return context.dispatch('get', {
-        url: '/api/form',
-        data: payload
-      }).then(function (response) {
-        console.log(response)
-        if (response.code) {
-          response.status = response.code
-        }
-        if (response.result) {
-          response.data = response.result
-        }
-
-        switch (response.status) {
-          case 200:
-            if (response.data.success) {
-              context.commit(FORM_SET, response.data.result)
-            }
-            break
-          default:
-            break
+      return getForm(payload).then(function (response) {
+        if (response.success) {
+          context.commit(FORM_SET, response.form)
         }
         return response
       })
