@@ -37,6 +37,10 @@
           v-if="['text','string'].includes(element.type)"
           v-model="form.values[element.field]"
           :disabled="element.disabled"/>
+        <a-input-password
+          v-if="element.type === 'password'"
+          v-model="form.values[element.field]"
+          :disabled="element.disabled"/>
         <a-input-number
           v-if="['smallint','int','bigint','float'].includes(element.type)"
           v-model="form.values[element.field]"
@@ -68,7 +72,7 @@
             :table="form.values[element.field]"/>
         </template>
         <badge :element="element"></badge>
-
+        <div v-if="element.type === 'display'" v-html="element.value.value" style="text-align: center; padding-top: 20px"/>
       </a-form-model-item>
     </template>
     <template>
@@ -88,6 +92,22 @@
           :key="child.id"/>
       </fieldset>
     </template>
+    <template>
+      <a-tabs
+        v-if="element.type === 'tabs'"
+        :key="element.id">
+        <a-tab-pane
+          v-for="child in element.items"
+          :key="child.id"
+          :tab="child.name">
+          <elements
+            v-for="_child in child.items"
+            :element="_child"
+            :form="form"
+            :key="_child.id"/>
+        </a-tab-pane>
+      </a-tabs>
+    </template>
   </div>
 </template>
 
@@ -99,7 +119,21 @@ import FormItem from 'ant-design-vue/es/form-model/FormItem'
 
 export default {
   name: 'Elements',
-  props: ['element', 'form', 'errors'],
+  // props: ['element', 'form', 'errors'],
+  props: {
+    element: {
+      type: Object,
+      default: () => null
+    },
+    form: {
+      type: Object,
+      default: () => null
+    },
+    errors: {
+      type: Object,
+      default: () => null
+    }
+  },
   components: {
     'table-builder': () => import('../Tables/TableBuilder'),
     'badge': Badge,

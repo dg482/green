@@ -118,7 +118,32 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'TableBuilder',
-  props: ['table', 'size', 'buttonSize', 'url', 'params', 'relation'],
+  props: {
+    table: {
+      type: Object,
+      default: () => {}
+    },
+    size: {
+      type: String,
+      default: () => 'default'
+    },
+    buttonSize: {
+      type: String,
+      default: () => 'default'
+    },
+    url: {
+      type: String,
+      default: () => ''
+    },
+    params: {
+      type: Object,
+      default: () => {}
+    },
+    relation: {
+      type: String,
+      default: () => ''
+    }
+  },
   components: {
     FormBuilder,
     Exception,

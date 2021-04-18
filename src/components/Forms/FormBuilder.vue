@@ -76,13 +76,34 @@ export default {
     'a-form-model': Form
   },
   props: {
-    isVisible: Boolean,
-    id: String,
-    record: Object,
-    form: Object,
-    onLoad: Function,
-    onCloseDrawer: Function,
-    useDrawer: Boolean
+    isVisible: {
+      type: Boolean,
+      default: () => false
+    },
+    id: {
+      type: String,
+      default: () => ''
+    },
+    record: {
+      type: Object,
+      default: () => null
+    },
+    form: {
+      type: Object,
+      default: () => null
+    },
+    onLoad: {
+      type: Function,
+      default: () => null
+    },
+    onCloseDrawer: {
+      type: Function,
+      default: () => null
+    },
+    useDrawer: {
+      type: Boolean,
+      default: () => false
+    }
   },
   computed: {
     ...mapGetters({
@@ -265,8 +286,12 @@ export default {
 </script>
 
 <style>
-fieldset.field_set {
-  border: 1px groove #eeeeee !important;
+.w-auto {
+  width: auto !important;
+}
+
+fieldset.border {
+  border: 1px groove #eeeeee57 !important;
   padding: 0 1.4em 1.4em 1.4em !important;
   /*margin: 0 0 1.5em 0 !important;*/
 }
