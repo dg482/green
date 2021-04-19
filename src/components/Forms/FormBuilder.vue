@@ -47,16 +47,31 @@
   </a-drawer>
   <div v-else>
     <transition name="slide-fade">
-      <a-form-model
-        v-if="form"
-        :model="form.values"
-        v-bind="formItemLayout">
-        <VuePerfectScrollbar class="app-sidebar-scroll">
+      <div>
+        <a-form-model
+          v-if="form"
+          :model="form.values"
+          v-bind="formItemLayout">
           <template v-for="element in form.items">
             <elements :element="element" :form="form" :key="element.id"/>
           </template>
-        </VuePerfectScrollbar>
-      </a-form-model>
+        </a-form-model>
+        <div class="buttons">
+          <template v-for="(button, idx) in form.actions">
+            <a-button
+              style="margin-right: 8px"
+              :key="idx"
+              :type="errors.length > 0?'danger':button.type"
+              :icon="button.icon"
+              :loading="button.load"
+              :disabled="button.disabled"
+              :size="size"
+              @click="onAction(button)">
+              {{ button.text }}
+            </a-button>
+          </template>
+        </div>
+      </div>
     </transition>
   </div>
 </template>
@@ -370,6 +385,16 @@ legend {
   padding: 10px 16px;
   text-align: right;
   left: 0;
+  background: #fff;
+  border-radius: 0 0 4px 4px;
+  z-index: 1000;
+}
+
+.buttons {
+  width: 100%;
+  border-top: 1px solid #e8e8e8;
+  padding-top: 10px;
+  text-align: right;
   background: #fff;
   border-radius: 0 0 4px 4px;
   z-index: 1000;
