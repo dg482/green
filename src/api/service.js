@@ -12,6 +12,6 @@ export function post (url, params) {
   return request({
     url: url,
     method: 'post',
-    params: params
+    data: params
   })
 }

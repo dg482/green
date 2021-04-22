@@ -12,6 +12,8 @@
         :wrapperCol="['table'].indexOf(element.type) !== -1 ?{span:24}:null">
         <a-date-picker
           :locale="locale"
+          :mode="'date'"
+          :format="'YYYY-MM-DD'"
           v-model="form.values[element.field]"
           v-if="element.type === 'date'"
         />
@@ -49,6 +51,7 @@
         <a-switch
           v-if="element.type === 'switch'"
           v-model="form.values[element.field]"
+          @change="() => onChangeSwitch(element)"
           :disabled="element.disabled"/>
         <a-select
           v-if="element.type === 'select'"
@@ -57,7 +60,6 @@
           <a-select-option
             v-for="(option, index) in element.variant"
             :key="(index + 9).toString(36) + option.id"
-
             :value="option.id">
             {{ option.value }}
           </a-select-option>
@@ -72,7 +74,7 @@
             :table="form.values[element.field]"/>
         </template>
         <badge :element="element"></badge>
-        <div v-if="element.type === 'display'" v-html="element.value.value" style="text-align: center; padding-top: 20px"/>
+        <div v-if="element.type === 'display'" v-html="element.value.value" :style="element.style"/>
       </a-form-model-item>
     </template>
     <template>
@@ -116,6 +118,7 @@ import Badge from './Badge'
 import Cookies from 'js-cookie'
 import locale from 'ant-design-vue/es/date-picker/locale/ru_RU'
 import FormItem from 'ant-design-vue/es/form-model/FormItem'
+import { post } from '../../api/service'
 
 export default {
   name: 'Elements',
@@ -130,8 +133,8 @@ export default {
       default: () => null
     },
     errors: {
-      type: Object,
-      default: () => null
+      type: Array,
+      default: () => []
     }
   },
   components: {
@@ -151,6 +154,18 @@ export default {
     }
   },
   methods: {
+    onChangeSwitch (element) {
+      if (element.action) {
+        post('resource/switch-action', {
+          form: this.form.form,
+          action: element.action,
+          checked: this.form.values[element.field],
+          values: this.form.values
+        }).then((response) => {
+          console.log(response)
+        })
+      }
+    },
     getPrecision (element) {
       return (element.type === 'float') ? 2 : 0
     },

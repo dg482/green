@@ -159,7 +159,7 @@ const service = {
         })
       }
 
-      return post('/api/form', payload).then(function (response) {
+      return post('/resource/form', payload).then(function (response) {
         if (response.data.success) {
           context.commit(FORM_SET, response.data.form)
         }

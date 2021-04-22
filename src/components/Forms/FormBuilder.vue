@@ -50,7 +50,9 @@
       <div>
         <a-form-model
           v-if="form"
+          ref="ruleForm"
           :model="form.values"
+          :rules="form.validator"
           v-bind="formItemLayout">
           <template v-for="element in form.items">
             <elements :element="element" :form="form" :key="element.id"/>
@@ -81,14 +83,14 @@ import Vue from 'vue'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import Elements from './Elements'
 import moment from 'moment'
-import { Form } from 'ant-design-vue'
+import { FormModel } from 'ant-design-vue'
 
 export default {
   name: 'FormBuilder',
   components: {
     VuePerfectScrollbar,
     'elements': Elements,
-    'a-form-model': Form
+    'a-form-model': FormModel
   },
   props: {
     isVisible: {
@@ -231,33 +233,30 @@ export default {
               button.load = true
               formData.append('form', this.form.form)
 
-              for (const name in this.form.values) {
+              for (var name in this.form.values) {
                 const value = this.form.values[name]
-                if (value) {
-                  switch (name) {
-                    case 'id':
-                      formData.append('id', getValue(value))
-                      formData.append('values[' + name + ']', getValue(value))
-                      break
-                    default:
-                      if (Array.isArray(value)) {
-                        if (value.length > 1) {
-                          for (const i in value) {
-                            formData.append('values[' + name + '][]', getValue(value[i]))
-                          }
-                        } else {
-                          if (value[0] && value[0].type !== undefined) {
-                            formData.append('values[' + name + ']', getValue(value[0]))
-                          }
+                switch (name) {
+                  case 'id':
+                    formData.append('id', getValue(value))
+                    formData.append('values[' + name + ']', getValue(value))
+                    break
+                  default:
+                    if (Array.isArray(value)) {
+                      if (value.length > 1) {
+                        for (const i in value) {
+                          formData.append('values[' + name + '][]', getValue(value[i]))
                         }
                       } else {
-                        formData.append('values[' + name + ']', getValue(value))
+                        if (value[0] && value[0].type !== undefined) {
+                          formData.append('values[' + name + ']', getValue(value[0]))
+                        }
                       }
-                      break
-                  }
+                    } else {
+                      formData.append('values[' + name + ']', getValue(value))
+                    }
+                    break
                 }
               }
-
               this.$store.dispatch('ACTION_FORM_SAVE', formData).then(function (response) {
                 if (response.data.success) {
                   switch (response.data.form.form) {
