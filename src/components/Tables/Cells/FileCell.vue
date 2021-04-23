@@ -24,7 +24,16 @@ function getBase64 (file) {
 
 export default {
   name: 'FileCell',
-  props: ['record', 'value'],
+  props: {
+    record: {
+      type: Object,
+      default: () => {}
+    },
+    value: {
+      type: String,
+      default: () => null
+    }
+  },
   data () {
     return {
       previewVisible: false,

@@ -47,16 +47,33 @@
   </a-drawer>
   <div v-else>
     <transition name="slide-fade">
-      <a-form-model
-        v-if="form"
-        :model="form.values"
-        v-bind="formItemLayout">
-        <VuePerfectScrollbar class="app-sidebar-scroll">
+      <div>
+        <a-form-model
+          v-if="form"
+          ref="ruleForm"
+          :model="form.values"
+          :rules="form.validator"
+          v-bind="formItemLayout">
           <template v-for="element in form.items">
             <elements :element="element" :form="form" :key="element.id"/>
           </template>
-        </VuePerfectScrollbar>
-      </a-form-model>
+        </a-form-model>
+        <div class="buttons">
+          <template v-for="(button, idx) in form.actions">
+            <a-button
+              style="margin-right: 8px"
+              :key="idx"
+              :type="errors.length > 0?'danger':button.type"
+              :icon="button.icon"
+              :loading="button.load"
+              :disabled="button.disabled"
+              :size="size"
+              @click="onAction(button)">
+              {{ button.text }}
+            </a-button>
+          </template>
+        </div>
+      </div>
     </transition>
   </div>
 </template>
@@ -66,23 +83,44 @@ import Vue from 'vue'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import Elements from './Elements'
 import moment from 'moment'
-import { Form } from 'ant-design-vue'
+import { FormModel } from 'ant-design-vue'
 
 export default {
   name: 'FormBuilder',
   components: {
     VuePerfectScrollbar,
     'elements': Elements,
-    'a-form-model': Form
+    'a-form-model': FormModel
   },
   props: {
-    isVisible: Boolean,
-    id: String,
-    record: Object,
-    form: Object,
-    onLoad: Function,
-    onCloseDrawer: Function,
-    useDrawer: Boolean
+    isVisible: {
+      type: Boolean,
+      default: () => false
+    },
+    id: {
+      type: String,
+      default: () => ''
+    },
+    record: {
+      type: Object,
+      default: () => null
+    },
+    form: {
+      type: Object,
+      default: () => null
+    },
+    onLoad: {
+      type: Function,
+      default: () => null
+    },
+    onCloseDrawer: {
+      type: Function,
+      default: () => null
+    },
+    useDrawer: {
+      type: Boolean,
+      default: () => false
+    }
   },
   computed: {
     ...mapGetters({
@@ -195,33 +233,30 @@ export default {
               button.load = true
               formData.append('form', this.form.form)
 
-              for (const name in this.form.values) {
+              for (var name in this.form.values) {
                 const value = this.form.values[name]
-                if (value) {
-                  switch (name) {
-                    case 'id':
-                      formData.append('id', getValue(value))
-                      formData.append('values[' + name + ']', getValue(value))
-                      break
-                    default:
-                      if (Array.isArray(value)) {
-                        if (value.length > 1) {
-                          for (const i in value) {
-                            formData.append('values[' + name + '][]', getValue(value[i]))
-                          }
-                        } else {
-                          if (value[0] && value[0].type !== undefined) {
-                            formData.append('values[' + name + ']', getValue(value[0]))
-                          }
+                switch (name) {
+                  case 'id':
+                    formData.append('id', getValue(value))
+                    formData.append('values[' + name + ']', getValue(value))
+                    break
+                  default:
+                    if (Array.isArray(value)) {
+                      if (value.length > 1) {
+                        for (const i in value) {
+                          formData.append('values[' + name + '][]', getValue(value[i]))
                         }
                       } else {
-                        formData.append('values[' + name + ']', getValue(value))
+                        if (value[0] && value[0].type !== undefined) {
+                          formData.append('values[' + name + ']', getValue(value[0]))
+                        }
                       }
-                      break
-                  }
+                    } else {
+                      formData.append('values[' + name + ']', getValue(value))
+                    }
+                    break
                 }
               }
-
               this.$store.dispatch('ACTION_FORM_SAVE', formData).then(function (response) {
                 if (response.data.success) {
                   switch (response.data.form.form) {
@@ -265,8 +300,12 @@ export default {
 </script>
 
 <style>
-fieldset.field_set {
-  border: 1px groove #eeeeee !important;
+.w-auto {
+  width: auto !important;
+}
+
+fieldset.border {
+  border: 1px groove #eeeeee57 !important;
   padding: 0 1.4em 1.4em 1.4em !important;
   /*margin: 0 0 1.5em 0 !important;*/
 }
@@ -345,6 +384,16 @@ legend {
   padding: 10px 16px;
   text-align: right;
   left: 0;
+  background: #fff;
+  border-radius: 0 0 4px 4px;
+  z-index: 1000;
+}
+
+.buttons {
+  width: 100%;
+  border-top: 1px solid #e8e8e8;
+  padding-top: 10px;
+  text-align: right;
   background: #fff;
   border-radius: 0 0 4px 4px;
   z-index: 1000;
