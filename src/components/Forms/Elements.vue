@@ -10,6 +10,13 @@
         :prop="element.field"
         :labelCol="['table'].indexOf(element.type) !== -1 ?{span:24}:null"
         :wrapperCol="['table'].indexOf(element.type) !== -1 ?{span:24}:null">
+        <div class="ant-editor-quill" v-if="element.type === 'text'">
+          <quill-editor
+            v-model="form.values[element.field]"
+            ref="myQuillEditor"
+            :options="editorOption">
+          </quill-editor>
+        </div>
         <a-date-picker
           :locale="locale"
           :mode="'date'"
@@ -36,7 +43,7 @@
           </a-upload>
         </div>
         <a-input
-          v-if="['text','string'].includes(element.type)"
+          v-if="['string'].includes(element.type)"
           v-model="form.values[element.field]"
           :disabled="element.disabled"/>
         <a-input-password
@@ -114,11 +121,17 @@
 </template>
 
 <script>
+// import theme style
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
 import Badge from './Badge'
 import Cookies from 'js-cookie'
 import locale from 'ant-design-vue/es/date-picker/locale/ru_RU'
 import FormItem from 'ant-design-vue/es/form-model/FormItem'
 import { post } from '../../api/service'
+import { quillEditor } from 'vue-quill-editor'
 
 export default {
   name: 'Elements',
@@ -140,11 +153,15 @@ export default {
   components: {
     'table-builder': () => import('../Tables/TableBuilder'),
     'badge': Badge,
-    'a-form-model-item': FormItem
+    'a-form-model-item': FormItem,
+    quillEditor
   },
   computed: {},
   data () {
     return {
+      editorOption: {
+        theme: 'snow'
+      },
       locale,
       previewVisible: false,
       previewImage: '',
@@ -155,6 +172,7 @@ export default {
   },
   methods: {
     onChangeSwitch (element) {
+      console.log(this.form)
       if (element.action) {
         post('resource/switch-action', {
           form: this.form.form,
@@ -195,6 +213,17 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="less"  scoped>
+@import url('../index.less');
 
+/* 覆盖 quill 默认边框圆角为 ant 默认圆角，用于统一 ant 组件风格 */
+.ant-editor-quill {
+  line-height: initial;
+  /deep/ .ql-toolbar.ql-snow {
+    border-radius: @border-radius-base @border-radius-base 0 0;
+  }
+  /deep/ .ql-container.ql-snow {
+    border-radius: 0 0 @border-radius-base @border-radius-base;
+  }
+}
 </style>

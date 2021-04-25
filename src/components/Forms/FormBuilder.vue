@@ -258,8 +258,8 @@ export default {
                 }
               }
               this.$store.dispatch('ACTION_FORM_SAVE', formData).then(function (response) {
-                if (response.data.success) {
-                  switch (response.data.form.form) {
+                if (response.success) {
+                  switch (response.form.form) {
                     case 'settings/ui':
                       me.$store.dispatch('UI_SET_APP_KEY')
                       break
@@ -267,8 +267,8 @@ export default {
                   setNotification({ type: 'success', message: 'Команда выполнена успешно' })
                   me.errors = []
                   me.onClose(true)
-                } else if (response.data.errors) {
-                  setErrors(response.data.errors)
+                } else if (response.errors) {
+                  setErrors(response.errors)
                 }
                 return response
               }).catch(function (error) {

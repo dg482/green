@@ -274,16 +274,15 @@ export default {
 
       switch (action.id) {
         case 'update':
+        case 'create':
           this.formIsVisible = true
           this.$store.dispatch('ACTION_FORM_GET', {
             form: action.form,
-            id: record.id
+            id: (action.id === 'update') ? record.id : 0
           }).then(function (response) {
             setFormLoad()
             return response
           })
-          break
-        case 'create':
           break
         case 'reload':
           load(true)

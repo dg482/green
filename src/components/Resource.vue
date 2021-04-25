@@ -4,7 +4,7 @@
       :key="key"
       :size="'default'"
       :button-size="'small'"
-      :url="'api/resource'"
+      :url="'resource'"
       :params="params"
       :table="table"/>
   </div>
@@ -24,7 +24,7 @@ export default {
       table: null,
       key: 'default',
       params: {
-        resource: this.$route.meta.resource
+        alias: this.$route.meta.resource
       }
     }
   },
