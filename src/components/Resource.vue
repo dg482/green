@@ -46,6 +46,10 @@ export default {
 
       update({ result: { result: null } })
 
+      if (this.params.resource === undefined) {
+        this.key = this.params.resource = this.$route.meta.resource
+      }
+
       resource(this.params)
         .then(function (response) {
           if (response.result.success) {
