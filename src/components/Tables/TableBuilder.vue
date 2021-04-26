@@ -290,7 +290,25 @@ export default {
           request({
             url: this.url,
             method: 'get',
-            params: this.params
+            params: {
+              alias: this.params.resource
+            }
+          }).then(function (response) {
+            return update(response)
+          }).catch(function (error) {
+            load(false)
+            return error
+          })
+          break
+        case 'delete':
+          load(true)
+          request({
+            url: this.url,
+            method: 'delete',
+            params: {
+              alias: this.params.resource,
+              id: record.id
+            }
           }).then(function (response) {
             return update(response)
           }).catch(function (error) {

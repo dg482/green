@@ -226,4 +226,25 @@ export default {
     border-radius: 0 0 @border-radius-base @border-radius-base;
   }
 }
+
+.quill-editor {
+  .ql-container {
+    min-height: 30vh;
+  }
+}
+.ql-editor img {
+  width: 100%;
+  height: 200px;
+}
+
+.editor {
+  width: 100%;
+  height: 100vh;
+  .flex {
+    display: flex;
+  }
+  .flex-1 {
+    flex: 1;
+  }
+}
 </style>
