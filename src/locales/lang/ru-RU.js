@@ -9,6 +9,7 @@ import dashboard from './zh-CN/dashboard'
 import form from './zh-CN/form'
 import result from './zh-CN/result'
 import account from './zh-CN/account'
+import resource from './ru-RU/resource'
 
 const components = {
   antLocale: antd,
@@ -25,6 +26,7 @@ export default {
   'layouts.userLayout.description': 'FastDog интерфейс администрирования.',
   ...components,
   ...global,
+  ...resource,
   ...menu,
   ...setting,
   ...user,
