@@ -66,7 +66,7 @@
           v-model="form.values[element.field]"
           :placeholder="element.placeholder">
           <a-select-option
-            v-for="(option, index) in element.variant"
+            v-for="(option, index) in element.variants"
             :key="(index + 9).toString(36) + option.id"
             :value="option.id">
             {{ option.value }}
