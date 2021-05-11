@@ -9,7 +9,7 @@
       :class="{'table':table}">
       <a-page-header
         slot="title"
-        :title="(table) ? table.title : 'Загрузка данных ...'"
+        :title="(table) ? table.title : $t('resource.table.loading') "
         style="padding: 0 !important;"
         @back="() => $router.go(-1)"
       >
@@ -27,14 +27,14 @@
             <a-menu-divider/>
             <a-menu-item key="reload">
               <a-icon type="reload"/>
-              Обновить данные
+              {{ $t('resource.table.update') }}
             </a-menu-item>
             <a-menu-item key="setting">
               <a-icon type="setting"/>
-              Настройки таблицы
+              {{ $t('resource.table.setting') }}
             </a-menu-item>
           </a-menu>
-          <a-button> Действия
+          <a-button> {{ $t('resource.table.actions') }}
             <a-icon type="down"/>
           </a-button>
         </a-dropdown>
@@ -68,7 +68,7 @@
           <template v-for="action in table.rowActions">
             <a-popconfirm
               v-if="action.confirm"
-              @confirm="() => runAction(action.id, record)"
+              @confirm="() => runAction(action, record)"
               :okType="action.confirm.okType"
               :okText="action.confirm.okText"
               :cancelText="action.confirm.cancelText"
@@ -107,6 +107,7 @@
         :onCloseDrawer="formOnClose"
       />
     </a-card>
+    <setting />
   </div>
 </template>
 
@@ -115,6 +116,7 @@ import request from '@/utils/request'
 import FormBuilder from '../Forms/FormBuilder'
 import Exception from '@/components/Exception'
 import { mapGetters } from 'vuex'
+import SettingsTable from './SettingsTable'
 
 export default {
   name: 'TableBuilder',
@@ -147,7 +149,8 @@ export default {
   components: {
     FormBuilder,
     Exception,
-    'file-cell': () => import('./Cells/FileCell')
+    'file-cell': () => import('./Cells/FileCell'),
+    'setting': SettingsTable
   },
   computed: {
     ...mapGetters({
@@ -257,8 +260,8 @@ export default {
       }
       const update = (response) => {
         load(false)
-        if (response.data.success) {
-          this.table_update = (this.relation) ? response.data.form.values[this.relation] : response.data.table
+        if (response.success) {
+          this.table_update = (this.relation) ? response.form.values[this.relation] : response.table
           this.tableKey = Math.random().toString(36)
         }
         return response
@@ -268,6 +271,7 @@ export default {
       }
       const setFormLoad = () => {
         this.formLoad = this.$store.getters['GET_FORM'](this.formId)
+        console.log('--->>> form load', this.formId, this.formLoad)
       }
       console.log('action', action)
       setForm(action.form)
@@ -286,7 +290,6 @@ export default {
           break
         case 'reload':
           load(true)
-          console.log(this.url, this.params)
           request({
             url: this.url,
             method: 'get',
@@ -315,6 +318,9 @@ export default {
             load(false)
             return error
           })
+          break
+        case 'setting':
+          this.$store.dispatch('ACTION_SET_OPEN_SETTING_TABLE')
           break
       }
     },

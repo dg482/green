@@ -1,6 +1,6 @@
 export default {
   'menu.welcome': 'Добро пожаловать',
-  'menu.home': 'FastDog',
+  'menu.home': 'Detensor',
   'menu.dashboard': 'Администрирование',
   'menu.dashboard.workplace': 'Рабочий стол',
   'menu.exception': 'Exception',

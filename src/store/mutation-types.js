@@ -34,3 +34,5 @@ export const UI_SET_APP_KEY = 'UI_SET_APP_KEY'
 export const SET_ERROR = 'SET_ERROR'
 export const SET_DEBUG = 'SET_DEBUG'
 export const SET_EXCEPTION = 'SET_EXCEPTION'
+
+export const SET_SETTING_TABLE = 'SET_SETTING_TABLE'
