@@ -43,7 +43,7 @@
         v-if="table"
         :locale="{emptyText: $t('resource.table.filters.emptyText'), filterConfirm: $t('resource.table.filters.search') }"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-        :columns="tbl().columns"
+        :columns="getColumns()"
         :data-source="tbl().data"
         :size="size"
         :rowKey="'id'"
@@ -101,7 +101,11 @@
         <div
           slot="filterDropdown"
           slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"
-          style="padding: 8px"
+          :style="{
+            padding: ['date','datetime'].includes(column.type) ? '0' : '8px',
+            width: ['date','datetime'].includes(column.type) ? '280px' : 'auto',
+            height: ['date','datetime'].includes(column.type) ? '386px' : 'auto',
+          }"
         >
           <a-input
             v-if="column.type === 'string'"
@@ -110,8 +114,20 @@
             :value="selectedKeys[0]"
             style="width: 188px; margin-bottom: 8px; display: block;"
             @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
+            @pressEnter="() => handleSearch(selectedKeys, confirm, column.dataIndex)"
           />
-          <div style="" class="ant-table-filter-dropdown-btns">
+          <a-date-picker
+            :locale="locale"
+            v-if="['date','datetime'].includes(column.type)"
+            dropdownClassName="filter-calendar"
+            @change="(moment, string) => setSelectedKeys(string ? [string] : [])"
+            :open="openDate"
+          />
+          <div
+            class="ant-table-filter-dropdown-btns"
+            :style="{
+              marginTop: ['date','datetime'].includes(column.type) ? '310px' : 0,
+            }">
             <a
               class="ant-table-filter-dropdown-link confirm"
               @click="() => handleSearch(selectedKeys, confirm, column.dataIndex)">{{ $t('resource.table.filters.search') }}</a>
@@ -140,6 +156,7 @@
 </template>
 
 <script>
+import locale from 'ant-design-vue/es/date-picker/locale/ru_RU'
 import request from '@/utils/request'
 import FormBuilder from '../Forms/FormBuilder'
 import Exception from '@/components/Exception'
@@ -189,7 +206,10 @@ export default {
     return {
       formId: 'default',
       formLoad: null,
+      searchInput: null,
       loading: false,
+      openDate: false,
+      locale: locale,
       formIsVisible: false,
       selectedRowKeys: [],
       selectedRows: [],
@@ -197,7 +217,9 @@ export default {
       table_update: null,
       tableKey: Math.random().toString(36),
       scrollY: ((window.innerHeight - 355) < 350) ? 350 : (window.innerHeight - 355),
-      tableParams: {}
+      tableParams: {
+        alias: this.params.resource
+      }
       // scrollX: (this.table.column && this.table.column.length) ? ((this.table.column.length - 2) * 200) + 150 : 0
     }
   },
@@ -236,15 +258,16 @@ export default {
       }
     },
     updateTableData () {
-      this.loading = true
+      const loading = (loading) => { this.loading = loading }
+      loading(true)
       return request({
         url: this.url,
         method: 'get',
         params: this.tableParams
       }).then((response) => {
-        this.loading = false
+        loading(false)
         this.updateTable(response)
-      }).catch(() => { this.loading = false })
+      }).catch(() => { loading(false) })
     },
     formOnClose (success) {
       this.formIsVisible = false
@@ -272,7 +295,26 @@ export default {
       }
     },
     getColumns () {
-      return this.table.columns
+      const open = (state) => { this.openDate = state }
+      const focus = () => { this.searchInput.focus() }
+      return this.tbl().columns.map(function (column) {
+        if (['string'].includes(column.type)) {
+          column.onFilterDropdownVisibleChange = visible => {
+            if (visible) {
+              setTimeout(() => {
+                focus()
+              }, 0)
+            }
+          }
+        }
+        if (['date', 'datetime'].includes(column.type)) {
+          column.onFilterDropdownVisibleChange = visible => {
+            open(visible)
+          }
+        }
+        console.log(column)
+        return column
+      })
     },
     getSelectedRow () {
       return this.selectedRows.length > 0 ? this.selectedRows[0] : {
@@ -401,5 +443,9 @@ export default {
 
 .ant-table-filter-dropdown-link {
   margin: 5px;
+}
+
+.filter-calendar, .filter-calendar .ant-calendar {
+  box-shadow: none !important;
 }
 </style>
