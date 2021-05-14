@@ -6,5 +6,8 @@ export default {
   'resource.table.setting': 'Настройки таблицы',
   'resource.table.actions': 'Действия',
   'resource.table.update': 'Обновить данные',
-  'resource.table.loading': 'Загрузка данных ...'
+  'resource.table.loading': 'Загрузка данных ...',
+  'resource.table.filters.search': 'Поиск',
+  'resource.table.filters.emptyText': 'Нет данных для отображения',
+  'resource.table.filters.reset': 'Сбросить'
 }

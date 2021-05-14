@@ -41,14 +41,14 @@
       </template>
       <a-table
         v-if="table"
-        :locale="{emptyText: 'Нет данных для отображения'}"
+        :locale="{emptyText: $t('resource.table.filters.emptyText'), filterConfirm: $t('resource.table.filters.search') }"
         :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         :columns="tbl().columns"
         :data-source="tbl().data"
         :size="size"
         :rowKey="'id'"
         :loading="loading"
-        :pagination="tbl.pagination"
+        :pagination="tbl().pagination"
         :scroll="{y:scrollY,x:((table.columns.length - 2) * 200) + 150}"
         :class="classTable()"
         :customRow="(record) => {
@@ -98,6 +98,34 @@
             </a-button>
           </template>
         </span>
+        <div
+          slot="filterDropdown"
+          slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"
+          style="padding: 8px"
+        >
+          <a-input
+            v-if="column.type === 'string'"
+            v-ant-ref="c => (searchInput = c)"
+            :placeholder="$t('resource.table.filters.search')"
+            :value="selectedKeys[0]"
+            style="width: 188px; margin-bottom: 8px; display: block;"
+            @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
+          />
+          <div style="" class="ant-table-filter-dropdown-btns">
+            <a
+              class="ant-table-filter-dropdown-link confirm"
+              @click="() => handleSearch(selectedKeys, confirm, column.dataIndex)">{{ $t('resource.table.filters.search') }}</a>
+            <a
+              class="ant-table-filter-dropdown-link clear"
+              @click="() => handleReset(clearFilters)">{{ $t('resource.table.filters.reset') }}</a>
+          </div>
+        </div>
+        <a-icon
+          slot="filterIcon"
+          slot-scope="filtered"
+          type="search"
+          :style="{ color: filtered ? '#108ee9' : undefined }"
+        />
       </a-table>
       <FormBuilder
         :id="formId"
@@ -168,7 +196,8 @@ export default {
       tbl: () => (this.table_update) ? this.table_update : this.table,
       table_update: null,
       tableKey: Math.random().toString(36),
-      scrollY: ((window.innerHeight - 355) < 350) ? 350 : (window.innerHeight - 355)
+      scrollY: ((window.innerHeight - 355) < 350) ? 350 : (window.innerHeight - 355),
+      tableParams: {}
       // scrollX: (this.table.column && this.table.column.length) ? ((this.table.column.length - 2) * 200) + 150 : 0
     }
   },
@@ -195,19 +224,27 @@ export default {
         const pager = { ...this.tbl.pagination }
         pager.current = pagination.current
         this.pagination = pager
-
-        request({
-          url: this.url,
-          method: 'get',
-          params: {
-            results: pagination.pageSize,
-            page: pagination.current,
-            sortField: sorter.field,
-            sortOrder: sorter.order,
-            ...filters
-          }
-        })
+        this.tableParams = {
+          alias: this.params.resource,
+          results: pagination.pageSize,
+          page: pagination.current,
+          sortField: sorter.field,
+          sortOrder: sorter.order,
+          filters: { ...filters }
+        }
+        this.updateTableData()
       }
+    },
+    updateTableData () {
+      this.loading = true
+      return request({
+        url: this.url,
+        method: 'get',
+        params: this.tableParams
+      }).then((response) => {
+        this.loading = false
+        this.updateTable(response)
+      }).catch(() => { this.loading = false })
     },
     formOnClose (success) {
       this.formIsVisible = false
@@ -254,16 +291,18 @@ export default {
     handleButtonClick (e, action, record) {
       this.runAction(action, record)
     },
+    updateTable (response) {
+      this.table_update = (this.relation) ? response.form.values[this.relation] : response.table
+      this.tableKey = Math.random().toString(36)
+      return response
+    },
     runAction (action, record) {
       const load = (set) => {
         this.loading = set
       }
       const update = (response) => {
         load(false)
-        if (response.success) {
-          this.table_update = (this.relation) ? response.form.values[this.relation] : response.table
-          this.tableKey = Math.random().toString(36)
-        }
+        this.updateTable(response)
         return response
       }
       const setForm = (form) => {
@@ -289,19 +328,7 @@ export default {
           })
           break
         case 'reload':
-          load(true)
-          request({
-            url: this.url,
-            method: 'get',
-            params: {
-              alias: this.params.resource
-            }
-          }).then(function (response) {
-            return update(response)
-          }).catch(function (error) {
-            load(false)
-            return error
-          })
+          this.updateTableData()
           break
         case 'delete':
           load(true)
@@ -328,6 +355,16 @@ export default {
       console.log('selectedRowKeys changed: ', selectedRowKeys, rows)
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = rows
+    },
+    handleSearch (selectedKeys, confirm, dataIndex) {
+      this.loading = true
+      confirm()
+      // this.searchText = selectedKeys[0]
+      // this.searchedColumn = dataIndex
+    },
+    handleReset (clearFilters) {
+      clearFilters()
+      // this.searchText = ''
     }
   }
 }
@@ -360,5 +397,9 @@ export default {
 
 .mr-1 {
   margin-right: 2px;
+}
+
+.ant-table-filter-dropdown-link {
+  margin: 5px;
 }
 </style>
