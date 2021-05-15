@@ -223,14 +223,23 @@ export default {
       const setNotification = (notification) => {
         this.$store.dispatch('ACTION_SET_NOTIFICATION', notification)
       }
-
+      const loadingButton = (button, state) => {
+        if (Array.isArray(me.form.actions)) {
+          me.form.actions = me.form.actions.map(function (btn) {
+            if (btn.action === button.action) {
+              btn.load = state ?? false
+            }
+            return btn
+          })
+        }
+      }
       const formData = new FormData()
 
       switch (button.action) {
         case 'action_save':
           this.$refs.ruleForm.validate((valid) => {
             if (valid) {
-              button.load = true
+              loadingButton(button, true)
               formData.append('form', this.form.form)
 
               for (var name in this.form.values) {
@@ -258,8 +267,9 @@ export default {
                 }
               }
               this.$store.dispatch('ACTION_FORM_SAVE', formData).then(function (response) {
-                if (response.data.success) {
-                  switch (response.data.form.form) {
+                loadingButton(button, false)
+                if (response.success) {
+                  switch (response.form.form) {
                     case 'settings/ui':
                       me.$store.dispatch('UI_SET_APP_KEY')
                       break
@@ -267,15 +277,16 @@ export default {
                   setNotification({ type: 'success', message: 'Команда выполнена успешно' })
                   me.errors = []
                   me.onClose(true)
-                } else if (response.data.errors) {
-                  setErrors(response.data.errors)
+                } else if (response.errors) {
+                  setErrors(response.errors)
                 }
                 return response
               }).catch(function (error) {
+                loadingButton(button, false)
                 console.log(error)
-                if (error.response.data.errors) {
-                  setErrors(error.response.data.errors)
-                }
+                // if (error.response.errors) {
+                //   setErrors(error.response.data.errors)
+                // }
               })
             } else {
               return false
@@ -285,7 +296,7 @@ export default {
           break
         case 'action_cancel':
         default:
-          this.$store.dispatch('ACTION_FORM_CLEAR')
+          me.onClose(true)
           break
       }
       setTimeout(function () {

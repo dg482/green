@@ -1,6 +1,6 @@
 export default {
     'menu.welcome': 'Welcome',
-    'menu.home': 'Home',
+    'menu.home': 'Detensor',
     'menu.dashboard': 'Dashboard',
     'menu.dashboard.analysis': 'Analysis',
     'menu.dashboard.monitor': 'Monitor',

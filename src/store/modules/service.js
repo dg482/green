@@ -1,15 +1,13 @@
 import Vue from 'vue'
-import { GET_FORM, GET_MENU, GET_DRAWER, GET_NOTIFICATION } from '../getters-types'
+import { GET_FORM, GET_MENU, GET_DRAWER, GET_NOTIFICATION, GET_SETTING_TABLE } from '../getters-types'
 import {
   FORM_SET, FORM_CLEAR, DRAWER_SET, SET_ERROR, SET_DEBUG,
-  SET_EXCEPTION
-  , NOTIFICATION_SET
+  SET_EXCEPTION, NOTIFICATION_SET, SET_SETTING_TABLE
 } from '../mutation-types'
 
 import {
   ACTION_FORM_GET, ACTION_FORM_CLEAR, ACTION_FORM_REFRESH, ACTION_FORM_SAVE,
-  ACTION_SET_EXCEPTION,
-  ACTION_SET_NOTIFICATION
+  ACTION_SET_EXCEPTION, ACTION_SET_NOTIFICATION, ACTION_SET_CLOSE_SETTING_TABLE, ACTION_SET_OPEN_SETTING_TABLE
 } from '../action-types'
 
 import VueLocalStorage from 'vue-localstorage'
@@ -38,6 +36,7 @@ const service = {
     notification: null,
     error: false,
     exception: null,
+    settingTable: false,
     debug: {
       scope: '',
       code: 0,
@@ -90,6 +89,9 @@ const service = {
     },
     [SET_DEBUG] (state, error) {
       state.debug = error
+    },
+    [SET_SETTING_TABLE] (state, set) {
+      state.settingTable = set
     }
   },
   getters: {
@@ -106,7 +108,8 @@ const service = {
     },
     error: () => service.state.error,
     debug: () => service.state.debug,
-    exception: () => service.state.exception
+    exception: () => service.state.exception,
+    [GET_SETTING_TABLE]: () => service.state.settingTable
   },
   actions: {
     [ACTION_SET_NOTIFICATION] (context, payload) {
@@ -158,10 +161,10 @@ const service = {
           }
         })
       }
-
       return post('/resource/form', payload).then(function (response) {
-        if (response.data.success) {
-          context.commit(FORM_SET, response.data.form)
+        console.log('--->>', response)
+        if (response.success) {
+          context.commit(FORM_SET, response.form)
         }
         return response
       })
@@ -173,6 +176,12 @@ const service = {
     },
     [ACTION_SET_EXCEPTION] (context, payload) {
       context.commit(SET_EXCEPTION, payload)
+    },
+    [ACTION_SET_OPEN_SETTING_TABLE] (context) {
+      context.commit(SET_SETTING_TABLE, true)
+    },
+    [ACTION_SET_CLOSE_SETTING_TABLE] (context) {
+      context.commit(SET_SETTING_TABLE, false)
     }
   }
 }

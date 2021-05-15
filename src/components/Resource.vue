@@ -4,7 +4,7 @@
       :key="key"
       :size="'default'"
       :button-size="'small'"
-      :url="'api/resource'"
+      :url="'resource'"
       :params="params"
       :table="table"/>
   </div>
@@ -24,7 +24,7 @@ export default {
       table: null,
       key: 'default',
       params: {
-        resource: this.$route.meta.resource
+        alias: this.$route.meta.resource
       }
     }
   },
@@ -45,6 +45,10 @@ export default {
       const setException = (exception) => this.$store.dispatch('service/ACTION_SET_EXCEPTION', exception)
 
       update({ result: { result: null } })
+
+      if (this.params.resource === undefined) {
+        this.key = this.params.resource = this.$route.meta.resource
+      }
 
       resource(this.params)
         .then(function (response) {
