@@ -103,7 +103,8 @@
           slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"
           :style="{
             padding: ['date','datetime'].includes(column.type) ? '0' : '8px',
-            width: ['date','datetime'].includes(column.type) ? '280px' : 'auto',
+            width: (['date','datetime'].includes(column.type) && column.filterMultiple === false) ? '280px' :
+              (['date','datetime'].includes(column.type) && column.filterMultiple === true) ? '560px' : 'auto',
             height: ['date','datetime'].includes(column.type) ? '386px' : 'auto',
           }"
         >
@@ -116,9 +117,15 @@
             @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
             @pressEnter="() => handleSearch(selectedKeys, confirm, column.dataIndex)"
           />
+          <a-range-picker
+            :locale="locale"
+            v-if="['date','datetime'].includes(column.type) && column.filterMultiple === true"
+            dropdownClassName="filter-calendar"
+            @change="(moment, range) => setSelectedKeys(range)"
+            :open="openDate"/>
           <a-date-picker
             :locale="locale"
-            v-if="['date','datetime'].includes(column.type)"
+            v-if="['date','datetime'].includes(column.type) && column.filterMultiple === false"
             dropdownClassName="filter-calendar"
             @change="(moment, string) => setSelectedKeys(string ? [string] : [])"
             :open="openDate"
