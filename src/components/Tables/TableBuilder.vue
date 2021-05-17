@@ -158,7 +158,11 @@
         :onCloseDrawer="formOnClose"
       />
     </a-card>
-    <setting :columns="tbl().columns" v-if="table"/>
+    <setting
+      v-if="table"
+      :columns="tbl().columns"
+      :alias="tableParams.alias"
+    />
   </div>
 </template>
 

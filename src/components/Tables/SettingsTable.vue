@@ -3,12 +3,13 @@
     :visible="visible"
     :title="$t('resource.table.setting')"
     centered
-    @ok="close"
+    @ok="save"
     @cancel="close"
     width="800px"
   >
     <a-row :gutter="[24,16]">
-      <a-col>
+      {{ storeColumns }}
+      <a-col v-if="storeColumns === null">
         <a-alert :message="$t('resource.table.setting.warning.empty_store_columns')" type="warning" show-icon/>
       </a-col>
       <a-col>
@@ -56,6 +57,10 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'SettingsTable',
   props: {
+    alias: {
+      type: String,
+      default: () => ''
+    },
     columns: {
       type: Array,
       default: () => []
@@ -73,6 +78,7 @@ export default {
   data () {
     return {
       loading: true,
+      storeColumns: [],
       treeSource: [],
       dataSource: [],
       targetColumns: [],
@@ -98,21 +104,20 @@ export default {
         title: column.title
       }
     })
-    console.log('--->>', this.dataSource)
   },
   methods: {
     loadFields () {
-      // const loading = (state) => { this.loading = state }
-      // loading(true)
-      // get('resource/fields', {
-      //   alias: this.$route.meta.resource
-      // }).then((response) => {
-      //   console.log(response)
-      //   loading(false)
-      // })
+      this.storeColumns = this.$store.getters['GET_COLUMNS_TABLE'](this.alias)
+      if (this.storeColumns) {
+        this.treeSource = this.storeColumns
+        const keys = this.treeSource.map((column) => { return column.key })
+        this.dataSource = this.dataSource.filter((item) => {
+          return !keys.includes(item.key)
+        })
+      }
     },
     itemSelect (e, c) {
-      console.log(e, c)
+      // console.log(e, c)
     },
     handleChange (nextTargetKeys, direction, moveKeys) {
       this.targetColumns = nextTargetKeys
@@ -141,6 +146,20 @@ export default {
     },
     close () {
       this.$store.dispatch('ACTION_SET_CLOSE_SETTING_TABLE')
+      this.clean()
+    },
+    save () {
+      this.$store.dispatch('SET_COLUMNS_TABLE', {
+        id: this.alias,
+        columns: this.treeSource
+      })
+      this.close()
+    },
+    clean () {
+      this.treeSelectColumn = []
+      this.targetColumns = []
+      this.selectedColumns = []
+      this.treeSource = []
     },
     onDragEnter (info) {
     },
