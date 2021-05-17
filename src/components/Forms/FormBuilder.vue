@@ -27,6 +27,9 @@
             </template>
           </VuePerfectScrollbar>
           <div class="bottom-buttons">
+            <a-button style="float: left" icon="setting" type="dashed">
+              {{ $t('resource.form.buttons.setting') }}
+            </a-button>
             <template v-for="(button, idx) in form.actions">
               <a-button
                 style="margin-right: 8px"
@@ -59,6 +62,9 @@
           </template>
         </a-form-model>
         <div class="buttons">
+          <a-button style="float: left" icon="setting" type="dashed">
+            {{ $t('resource.form.buttons.setting') }}
+          </a-button>
           <template v-for="(button, idx) in form.actions">
             <a-button
               style="margin-right: 8px"
@@ -137,13 +143,13 @@ export default {
           xs: { span: 24 },
           sm: { span: 10 },
           md: { spam: 10 },
-          lg: { span: 8 }
+          lg: { span: 6 }
         },
         wrapperCol: {
           xs: { span: 24 },
           sm: { span: 14 },
           md: { span: 14 },
-          lg: { span: 16 }
+          lg: { span: 18 }
         }
       },
       errors: []
@@ -250,6 +256,7 @@ export default {
                     formData.append('values[' + name + ']', getValue(value))
                     break
                   default:
+                    console.log(value)
                     if (Array.isArray(value)) {
                       if (value.length > 1) {
                         for (const i in value) {
@@ -346,9 +353,6 @@ legend {
   margin-bottom: 5px !important;
 }
 
-.anticon {
-  vertical-align: 0 !important;
-}
 
 .ant-row.ant-form-item {
   margin-bottom: 2px;

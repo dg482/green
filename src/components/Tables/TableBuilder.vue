@@ -158,7 +158,7 @@
         :onCloseDrawer="formOnClose"
       />
     </a-card>
-    <setting />
+    <setting :columns="tbl().columns" v-if="table"/>
   </div>
 </template>
 
@@ -319,7 +319,6 @@ export default {
             open(visible)
           }
         }
-        console.log(column)
         return column
       })
     },
