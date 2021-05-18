@@ -8,42 +8,43 @@
     width="800px"
   >
     <a-row :gutter="[24,16]">
-      {{ storeColumns }}
-      <a-col v-if="storeColumns === null">
-        <a-alert :message="$t('resource.table.setting.warning.empty_store_columns')" type="warning" show-icon/>
-      </a-col>
-      <a-col>
-        <a-transfer
-          class="table-setting"
-          :data-source="dataSource"
-          :titles="['Source', 'Target']"
-          :selected-keys="selectedColumns"
-          :target-keys="targetColumns"
-          :render="item => item.title"
-          @change="handleChange"
-          @selectChange="handleSelectChange"
-        >
-          <template
-            slot="children"
-            slot-scope="{ props: { direction, selectedKeys }, on: { itemSelect } }">
-            <a-tree
-              v-if="direction === 'right'"
-              blockNode
-              checkable
-              checkStrictly
-              defaultExpandAll
-              :titles="[$t('resource.table.setting.source'), $t('resource.table.setting.target')]"
-              :draggable="true"
-              :checkedKeys="[...treeSelectColumn]"
-              :treeData="treeSource"
-              @dragenter="onDragEnter"
-              @drop="onDrop"
-              default-expand-all
-              @check="(_, props) => { onChecked(_, props, [...treeSelectColumn], itemSelect); }"
-              @select="(_, props) => { onChecked(_, props, [...treeSelectColumn], itemSelect);}"/>
-          </template>
-        </a-transfer>
-      </a-col>
+      <a-spin :spinning="loading">
+        <a-col v-if="storeColumns === null">
+          <a-alert :message="$t('resource.table.setting.warning.empty_store_columns')" type="warning" show-icon/>
+        </a-col>
+        <a-col>
+          <a-transfer
+            class="table-setting"
+            :data-source="dataSource"
+            :titles="[$t('resource.table.setting.source'), $t('resource.table.setting.target')]"
+            :selected-keys="selectedColumns"
+            :target-keys="targetColumns"
+            :render="item => item.title"
+            @change="handleChange"
+            @selectChange="handleSelectChange"
+          >
+            <template
+              slot="children"
+              slot-scope="{ props: { direction, selectedKeys }, on: { itemSelect } }">
+              <a-tree
+                v-if="direction === 'right'"
+                blockNode
+                checkable
+                checkStrictly
+                defaultExpandAll
+                :titles="[$t('resource.table.setting.source'), $t('resource.table.setting.target')]"
+                :draggable="true"
+                :checkedKeys="[...treeSelectColumn]"
+                :treeData="treeSource"
+                @dragenter="onDragEnter"
+                @drop="onDrop"
+                default-expand-all
+                @check="(_, props) => { onChecked(_, props, [...treeSelectColumn], itemSelect); }"
+                @select="(_, props) => { onChecked(_, props, [...treeSelectColumn], itemSelect);}"/>
+            </template>
+          </a-transfer>
+        </a-col>
+      </a-spin>
     </a-row>
   </a-modal>
 </template>
@@ -77,14 +78,14 @@ export default {
   },
   data () {
     return {
-      loading: true,
+      loading: false,
       storeColumns: [],
+      storeKeys: [],
       treeSource: [],
       dataSource: [],
       targetColumns: [],
       selectedColumns: [],
-      treeSelectColumn: [],
-      toTree: false
+      treeSelectColumn: []
     }
   },
   watch: {
@@ -106,14 +107,14 @@ export default {
     })
   },
   methods: {
+    filterOption (inputValue, item) {
+      return false
+    },
     loadFields () {
       this.storeColumns = this.$store.getters['GET_COLUMNS_TABLE'](this.alias)
       if (this.storeColumns) {
         this.treeSource = this.storeColumns
-        const keys = this.treeSource.map((column) => { return column.key })
-        this.dataSource = this.dataSource.filter((item) => {
-          return !keys.includes(item.key)
-        })
+        this.targetColumns = this.storeColumns.map((column) => { return column.key })
       }
     },
     itemSelect (e, c) {
@@ -121,13 +122,9 @@ export default {
     },
     handleChange (nextTargetKeys, direction, moveKeys) {
       this.targetColumns = nextTargetKeys
-
       this.treeSource = this.dataSource.filter((col) => {
         return nextTargetKeys.includes(col.key)
       })
-      if (direction === 'right') {
-        this.treeSelectColumn = []
-      }
     },
     handleSelectChange (sourceSelectedKeys, targetSelectedKeys) {
       this.treeSelectColumn = [...sourceSelectedKeys, ...targetSelectedKeys]
@@ -141,19 +138,27 @@ export default {
     },
     onChecked (_, e, checkedKeys, itemSelect) {
       const { eventKey } = e.node
-      this.toTree = true
       itemSelect(eventKey, !this.isChecked(checkedKeys, eventKey))
     },
     close () {
       this.$store.dispatch('ACTION_SET_CLOSE_SETTING_TABLE')
       this.clean()
     },
-    save () {
+    onSave (callback) {
+      this.loading = true
       this.$store.dispatch('SET_COLUMNS_TABLE', {
         id: this.alias,
         columns: this.treeSource
       })
-      this.close()
+      setTimeout(() => {
+        this.loading = false
+        if (callback) {
+          callback()
+        }
+      }, 200)
+    },
+    save () {
+      this.onSave(() => this.close())
     },
     clean () {
       this.treeSelectColumn = []
@@ -217,6 +222,7 @@ export default {
         }
       }
       this.treeSource = data
+      this.onSave()
     }
   }
 }
