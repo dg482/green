@@ -158,7 +158,11 @@
         :onCloseDrawer="formOnClose"
       />
     </a-card>
-    <setting />
+    <setting
+      v-if="table"
+      :columns="tbl().columns"
+      :alias="tableParams.alias"
+    />
   </div>
 </template>
 
@@ -304,7 +308,8 @@ export default {
     getColumns () {
       const open = (state) => { this.openDate = state }
       const focus = () => { this.searchInput.focus() }
-      return this.tbl().columns.map(function (column) {
+      const storeColumns = this.$store.getters['GET_COLUMNS_TABLE'](this.tableParams.alias)
+      const columns = this.tbl().columns.map(function (column) {
         if (['string'].includes(column.type)) {
           column.onFilterDropdownVisibleChange = visible => {
             if (visible) {
@@ -319,9 +324,18 @@ export default {
             open(visible)
           }
         }
-        console.log(column)
         return column
       })
+
+      if (storeColumns) {
+        return storeColumns.map((item) => {
+          const col = columns.filter((column) => {
+            return column.dataIndex === item.key
+          })
+          return col[0]
+        })
+      }
+      return columns
     },
     getSelectedRow () {
       return this.selectedRows.length > 0 ? this.selectedRows[0] : {

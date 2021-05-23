@@ -13,6 +13,7 @@
         <a-icon slot="indicator" type="loading" style="font-size: 24px"/>
       </a-spin>
     </div>
+    {{ notification }}
     <transition name="slide-fade">
       <div style="padding-bottom: 55px; padding-top: 55px">
         <a-form-model
@@ -27,6 +28,9 @@
             </template>
           </VuePerfectScrollbar>
           <div class="bottom-buttons">
+            <a-button style="float: left" icon="setting" type="dashed" @click.prevent="openSetting">
+              {{ $t('resource.form.buttons.setting') }}
+            </a-button>
             <template v-for="(button, idx) in form.actions">
               <a-button
                 style="margin-right: 8px"
@@ -44,6 +48,7 @@
         </a-form-model>
       </div>
     </transition>
+    <setting :alias="$route.meta.resource"/>
   </a-drawer>
   <div v-else>
     <transition name="slide-fade">
@@ -59,6 +64,9 @@
           </template>
         </a-form-model>
         <div class="buttons">
+          <a-button style="float: left" icon="setting" type="dashed" @click.prevent="openSetting">
+            {{ $t('resource.form.buttons.setting') }}
+          </a-button>
           <template v-for="(button, idx) in form.actions">
             <a-button
               style="margin-right: 8px"
@@ -75,6 +83,7 @@
         </div>
       </div>
     </transition>
+    <setting :alias="$route.meta.resource"/>
   </div>
 </template>
 <script>
@@ -84,13 +93,16 @@ import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import Elements from './Elements'
 import moment from 'moment'
 import { FormModel } from 'ant-design-vue'
+import SettingsForm from './SettingsForm'
+import { post } from '../../api/service'
 
 export default {
   name: 'FormBuilder',
   components: {
     VuePerfectScrollbar,
     'elements': Elements,
-    'a-form-model': FormModel
+    'a-form-model': FormModel,
+    'setting': SettingsForm
   },
   props: {
     isVisible: {
@@ -125,10 +137,15 @@ export default {
   computed: {
     ...mapGetters({
       drawer: 'GET_DRAWER',
-      size: 'GET_UI_SIZE'
+      size: 'GET_UI_SIZE',
+      notification: 'GET_NOTIFICATION'
     })
   },
-  watch: {},
+  watch: {
+    notification: function (n) {
+      this.$notification.open(n)
+    }
+  },
   data () {
     return {
       // form: null,
@@ -137,13 +154,13 @@ export default {
           xs: { span: 24 },
           sm: { span: 10 },
           md: { spam: 10 },
-          lg: { span: 8 }
+          lg: { span: 6 }
         },
         wrapperCol: {
           xs: { span: 24 },
           sm: { span: 14 },
           md: { span: 14 },
-          lg: { span: 16 }
+          lg: { span: 18 }
         }
       },
       errors: []
@@ -234,38 +251,40 @@ export default {
         }
       }
       const formData = new FormData()
+      formData.append('form', this.form.form)
+
+      for (var name in this.form.values) {
+        const value = this.form.values[name]
+        switch (name) {
+          case 'id':
+            formData.append('id', getValue(value))
+            formData.append('values[' + name + ']', getValue(value))
+            break
+          default:
+            console.log(value)
+            if (Array.isArray(value)) {
+              if (value.length > 1) {
+                for (const i in value) {
+                  formData.append('values[' + name + '][]', getValue(value[i]))
+                }
+              } else {
+                if (value[0] && value[0].type !== undefined) {
+                  formData.append('values[' + name + ']', getValue(value[0]))
+                }
+              }
+            } else {
+              formData.append('values[' + name + ']', getValue(value))
+            }
+            break
+        }
+      }
 
       switch (button.action) {
         case 'action_save':
           this.$refs.ruleForm.validate((valid) => {
             if (valid) {
               loadingButton(button, true)
-              formData.append('form', this.form.form)
 
-              for (var name in this.form.values) {
-                const value = this.form.values[name]
-                switch (name) {
-                  case 'id':
-                    formData.append('id', getValue(value))
-                    formData.append('values[' + name + ']', getValue(value))
-                    break
-                  default:
-                    if (Array.isArray(value)) {
-                      if (value.length > 1) {
-                        for (const i in value) {
-                          formData.append('values[' + name + '][]', getValue(value[i]))
-                        }
-                      } else {
-                        if (value[0] && value[0].type !== undefined) {
-                          formData.append('values[' + name + ']', getValue(value[0]))
-                        }
-                      }
-                    } else {
-                      formData.append('values[' + name + ']', getValue(value))
-                    }
-                    break
-                }
-              }
               this.$store.dispatch('ACTION_FORM_SAVE', formData).then(function (response) {
                 loadingButton(button, false)
                 if (response.success) {
@@ -284,19 +303,37 @@ export default {
               }).catch(function (error) {
                 loadingButton(button, false)
                 console.log(error)
-                // if (error.response.errors) {
-                //   setErrors(error.response.data.errors)
-                // }
               })
             } else {
               return false
             }
           })
-
           break
         case 'action_cancel':
         default:
-          me.onClose(true)
+          const validate = button.action.includes('validate')
+          formData.append('alias', this.$route.meta.resource)
+          formData.append('action', button.action)
+          const run = () => {
+            loadingButton(button, true)
+            post('resource/action', formData).then((response) => {
+              loadingButton(button, false)
+              if (response.success) {
+                me.onClose(true)
+              } else {
+                setNotification({
+                  type: 'error',
+                  message: 'Ошибка выполнения команды',
+                  description: response.message
+                })
+              }
+            }).catch(function (error) {
+              loadingButton(button, false)
+              console.log('error', error)
+            })
+          }
+
+          (validate) ? this.$refs.ruleForm.validate((valid) => run()) : run()
           break
       }
       setTimeout(function () {
@@ -305,6 +342,9 @@ export default {
     },
     afterVisibleChange () {
 
+    },
+    openSetting () {
+      this.$store.dispatch('ACTION_SET_OPEN_SETTING_FORM')
     }
   }
 }
@@ -344,10 +384,6 @@ fieldset.text-info {
 legend {
   border: none !important;
   margin-bottom: 5px !important;
-}
-
-.anticon {
-  vertical-align: 0 !important;
 }
 
 .ant-row.ant-form-item {
